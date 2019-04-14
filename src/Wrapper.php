@@ -5,7 +5,27 @@ namespace KhairulImam\ROSWrapper;
 use RouterosAPI;
 
 class Wrapper extends RouterosAPI {
-    public function exec(String $cmd, Array $arguments = []) {
+
+    /**
+     * $command    The command that will be executed
+     * $arguments  The argument that gonna be passed to the command
+     * 
+     * return Array of responses
+     */
+    public function run(String $command, Array $arguments = []) {
+        $cmd = $this->getValidCmd($command);
+        return $this->comm($cmd, $arguments);
+    }
+
+    /**
+     * @Deprecated  this method already exists on the original class
+     * $command    The command that will be executed
+     * $arguments  The argument that gonna be passed to the command
+     * 
+     * return Array of responses
+     */
+    public function exec(String $command, Array $arguments = []) {
+        $cmd = $this->getValidCmd($command);
         if (count($arguments) <= 0) $this->write($cmd);
         else {
             $this->write($cmd, false);
@@ -18,4 +38,34 @@ class Wrapper extends RouterosAPI {
         }
         return $this->read();
     }
+
+    /**
+     * $cmd     Command string that gonna be checked
+     * 
+     * return   Boolean (true if valid else otherwise)
+     */
+    private function isValidCmd($cmd) {
+        return strpos($cmd, "/") != FALSE;
+    }
+
+    /**
+     * $cmd     Command that has no trailing slash
+     * 
+     * return String of slashed command
+     */
+    private function appendSlash($cmd) {
+        return "/".join("/", explode(" ", $cmd));
+    }
+
+    /**
+     * $cmd     Command that will be transformed into correct command
+     * 
+     * return   String command that has been transformed
+     */
+    public function getValidCmd($cmd) {
+        if (!$this->isValidCmd($cmd))
+            return $this->appendSlash($cmd);
+        return $cmd;
+    }
+
 }
