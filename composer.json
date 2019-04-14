@@ -3,7 +3,7 @@
     "description": "Just another Mikrotik RouterOS Wrapper :D",
     "version": "dev-master",
     "type": "Library",
-    "license": "GPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "Khairul Imam",
