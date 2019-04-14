@@ -7,14 +7,10 @@ use KhairulImam\ROSWrapper\Wrapper;
 $wrapper = new Wrapper();
 
 if ($wrapper->connect('192.168.1.1', 'admin', '')) {
-
-    $wrapper->write('/interface/getall');
- 
-    $READ = $wrapper->read(false);
-    $ARRAY = $wrapper->parseResponse($READ);
- 
-    print_r($ARRAY);
- 
+    $response = $wrapper->exec('/ip/address/set', [
+        "address" => "192.168.3.1/24",
+        ".id" => "*3"
+    ]);
+    print_r($response);
     $wrapper->disconnect();
- 
  }
