@@ -6,6 +6,10 @@ use RouterosAPI;
 
 class Wrapper extends RouterosAPI {
 
+    function __construct($hostname, $username = 'admin', $password = '') {
+        $this->connect($hostname, $username, $password);
+    }
+
     /**
      * $command    The command that will be executed
      * $arguments  The argument that gonna be passed to the command
