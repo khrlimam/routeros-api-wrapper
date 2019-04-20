@@ -2,12 +2,22 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use KhairulImam\ROSWrapper\RollbackedException;
+use KhairulImam\ROSWrapper\Sequential;
 use KhairulImam\ROSWrapper\Wrapper;
 
-$wrapper = new Wrapper('192.168.1.1');
+$wrapper = new Wrapper('192.168.192.130');
 
 if ($wrapper->connected) {
-    $response = $wrapper->exec('ip address getall');
-    print_r($response);
+    try {
+        $wrapper->runSequentialProcess(new Sequential(
+            new ChangeIPNameEther1($wrapper),
+            new ChangeIPNameEther2($wrapper),
+            new ChangeUpdatePool1($wrapper),
+            new DeleteIpAddressEther1()
+        ));
+    } catch (RollbackedException $e) {
+        echo("\nError: " . $e->getMessage() . PHP_EOL . PHP_EOL);
+    }
     $wrapper->disconnect();
- }
+}

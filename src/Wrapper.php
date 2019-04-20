@@ -16,9 +16,17 @@ class Wrapper extends RouterosAPI {
      * 
      * return Array of responses
      */
-    public function run(String $command, Array $arguments = []) {
+    public function run($command, Array $arguments = []) {
         $cmd = $this->getValidCmd($command);
         return $this->comm($cmd, $arguments);
+    }
+
+    /**
+     * @param Sequential $sequential
+     * @throws RollbackedException
+     */
+    public function runSequentialProcess(Sequential $sequential) {
+        SequentialExecutor::execute($sequential);
     }
 
     /**
@@ -28,7 +36,7 @@ class Wrapper extends RouterosAPI {
      * 
      * return Array of responses
      */
-    public function exec(String $command, Array $arguments = []) {
+    public function exec($command, Array $arguments = []) {
         $cmd = $this->getValidCmd($command);
         if (count($arguments) <= 0) $this->write($cmd);
         else {
