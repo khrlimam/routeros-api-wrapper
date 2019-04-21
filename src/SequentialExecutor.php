@@ -11,27 +11,29 @@ class SequentialExecutor
      * @param Sequential $sequentials
      * @throws RollbackedException
      */
-    public static function execute(Sequential $sequentials)
+    public static function execute(Sequential $sequential)
     {
-        $count = $sequentials->countProcesses();
+        $count = $sequential->countProcesses();
         for ($state = 0; $state < $count; $state++) {
-            $sequentials->setState($state);
+            $sequential->setState($state);
             try {
-                $sequentials->getRollbackableCommandOfCurrentState()->run();
+                $sequential->getRollbackableCommandOfCurrentState()->run();
             } catch (\Exception $e) {
-                static::rollback($sequentials);
+                $sequential->setReason($e->getMessage());
+                static::rollback($sequential);
                 break;
             }
         }
     }
 
-    private static function rollback(Sequential $sequentials)
+    private static function rollback(Sequential $sequential)
     {
-        $reversedRollbacks = $sequentials->getReversedRollbackableCommandFromLastExecutedState();
+        $reversedRollbacks = $sequential->getReversedRollbackableCommandFromLastExecutedState();
         foreach ($reversedRollbacks as $reversedRollback) {
             $reversedRollback->rollback();
         }
-        throw new RollbackedException($sequentials->getFailedProcess(), $reversedRollbacks);
+        $rollbackException = new RollbackedException($sequential->getFailedProcess(), $reversedRollbacks);
+        throw $rollbackException->withReason($sequential->getReason());
     }
 
 }

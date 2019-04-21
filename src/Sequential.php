@@ -10,6 +10,7 @@ class Sequential
     private $state;
     private $processes = [];
     private $countProcesses;
+    private $reason = "";
 
     private function __construct(array $sequens)
     {
@@ -31,7 +32,7 @@ class Sequential
     }
 
     /**
-     * @param mixed $state
+     * @param int $state
      */
     public function setState($state)
     {
@@ -44,6 +45,22 @@ class Sequential
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * @param sring $reason
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 
     public function getFailedProcess()

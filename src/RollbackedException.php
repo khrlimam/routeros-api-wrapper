@@ -10,6 +10,7 @@ class RollbackedException extends Exception
 
     private $failedCommand;
     private $rollbackedCommands = [];
+    private $reason = "";
 
     public function __construct(Command $failedCommand, array $rollbackedCommands)
     {
@@ -30,6 +31,27 @@ class RollbackedException extends Exception
             return $item->name();
         }, $this->rollbackedCommands);
         return join(", ", $names);
+    }
+
+    public function getFailedCommand() 
+    {
+        return $this->failedCommand;
+    }
+
+    public function getRollbackedCommands()
+    {
+        return $this->rollbackedCommands;
+    }
+
+    public function withReason($reason) 
+    {
+        $this->reason = $reason;
+        return $this;
+    }
+
+    public function getReason() 
+    {
+        return $this->reason;
     }
 
 }
