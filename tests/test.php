@@ -6,11 +6,11 @@ use KhairulImam\ROSWrapper\RollbackedException;
 use KhairulImam\ROSWrapper\Sequential;
 use KhairulImam\ROSWrapper\Wrapper;
 
-$wrapper = new Wrapper('192.168.192.130');
+$wrapper = new Wrapper('192.168.88.1');
 
 if ($wrapper->connected) {
     try {
-        $wrapper->runSequentialProcess(new Sequential(
+        $wrapper->runSequentialProcess(Sequential::process(
             new ChangeIPNameEther1($wrapper),
             new ChangeIPNameEther2($wrapper),
             new ChangeUpdatePool1($wrapper),

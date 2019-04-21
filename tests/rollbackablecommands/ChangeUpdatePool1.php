@@ -12,7 +12,7 @@ class ChangeUpdatePool1 extends RollbackableCommand
     public function __construct(Wrapper $mikrotik)
     {
         $this->mikrotik = $mikrotik;
-        $this->id = "*1";
+        $this->id = $mikrotik->run("ip pool print", ['?name' => 'local_pool'])[0]['.id'];
     }
 
     /**
@@ -28,7 +28,9 @@ class ChangeUpdatePool1 extends RollbackableCommand
         echo "RUNNING: " . $this->name() . PHP_EOL;
         $this->mikrotik->run("ip pool set", ['name' => 'global_pool', '.id' => $this->id]);
         echo "SUCCESS:" . PHP_EOL;
-        print_r($this->mikrotik->run("ip pool print", ['?name' => 'global_pool'])[0]);
+        $result = $this->mikrotik->run("ip pool print", ['?name' => 'global_pool'])[0];
+        $this->id = $result['.id'];
+        print_r($result);
     }
 
     public function rollback()

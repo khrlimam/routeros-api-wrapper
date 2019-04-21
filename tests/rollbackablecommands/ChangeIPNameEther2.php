@@ -11,7 +11,7 @@ class ChangeIPNameEther2 extends RollbackableCommand
     public function __construct(Wrapper $mikrotik)
     {
         $this->mikrotik = $mikrotik;
-        $this->originalAddress = "192.168.89.1/24";
+        $this->originalAddress = "192.168.90.1/24";
         $this->id = $this->mikrotik->run("ip address print", ["?interface" => "hotspot2"])[0]['.id'];
     }
 
@@ -28,14 +28,14 @@ class ChangeIPNameEther2 extends RollbackableCommand
         echo "RUNNING: " . $this->name() . PHP_EOL;
         $this->mikrotik->run("ip address set", ["address" => "192.168.92.1/24", ".id" => $this->id]);
         echo "SUCCESS:" . PHP_EOL;
-        print_r($this->mikrotik->run("ip address print", ["?interface" => "hotspot1"])[0]);
-        $this->id = $this->mikrotik->run("ip address print", ["?interface" => "hotspot1"])[0]['.id'];
+        print_r($this->mikrotik->run("ip address print", ["?interface" => "hotspot2"])[0]);
+        $this->id = $this->mikrotik->run("ip address print", ["?interface" => "hotspot2"])[0]['.id'];
     }
 
     public function rollback()
     {
         echo "ROLLBACK: " . $this->name() . PHP_EOL;
         $this->mikrotik->run("ip address set", ["address" => $this->originalAddress, ".id" => $this->id]);
-        print_r($this->mikrotik->run("ip address print", ["?interface" => "hotspot1"])[0]);
+        print_r($this->mikrotik->run("ip address print", ["?interface" => "hotspot2"])[0]);
     }
 }

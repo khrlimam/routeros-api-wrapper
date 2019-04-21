@@ -11,7 +11,7 @@ class Sequential
     private $processes = [];
     private $countProcesses;
 
-    public function __construct(RollbackableCommand ...$sequens)
+    private function __construct(array $sequens)
     {
         $this->processes = $sequens;
         $this->countProcesses = count($sequens);
@@ -25,7 +25,7 @@ class Sequential
         return $this->countProcesses;
     }
 
-    public static function process(array $sequentialProcesses)
+    public static function process(RollbackableCommand ...$sequentialProcesses)
     {
         return new Sequential($sequentialProcesses);
     }
